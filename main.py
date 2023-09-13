@@ -2,7 +2,7 @@
 
 import tcod
 
-from actions import EscapeAction, MovementAction
+from engine import Engine
 from entity import Entity
 from input_handlers import EventHandler
 
@@ -15,15 +15,16 @@ def main():
     )
 
     event_handler = EventHandler()
-
-    player = Entity(int(screen_width / 2), int(screen_height / 2), "@", (255, 255, 255))
-    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), "@", (255, 255, 0))
+ 
+    player = Entity(int(screen_width / 2), int(screen_height / 2), int(56), int(22), "@", (255, 255, 255))
+    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), int(56), int(22), "@", (255, 255, 0))
     entities = {npc, player}
+
+    engine = Engine(entities=entities, event_handler=event_handler, player=player)
 
     with tcod.context.new_terminal(
         screen_width,
         screen_height,
-
         tileset = tileset,
 
         title = "Dracholm: Fires of Ghax",
@@ -32,22 +33,8 @@ def main():
         root_console = tcod.console.Console(screen_width, screen_height, order="F")
         while True:
             
-            for entity in entities:
-                root_console.print(x=entity.x, y=entity.y, string=entity.char, fg=entity.color)
-
-            context.present(root_console)
-            root_console.clear()
-            for event in tcod.event.wait():
-                action = event_handler.dispatch(event)
-
-                if action is None:
-                    continue
-                
-                if isinstance(action, MovementAction):
-                    player.move(dx=action.dx, dy=action.dy)
-
-                elif isinstance(action, EscapeAction):
-                    raise SystemExit()
-            
+            engine.render(console=root_console, context=context)
+            events = tcod.event.wait()
+            engine.handle_events(events)
 if __name__ == "__main__":
     main()
