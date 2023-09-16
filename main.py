@@ -1,10 +1,11 @@
-# Welcome to Dracholm! We have eagerly awaited your visit, stranger..
 
 import tcod
 
 from engine import Engine
 from entity import Entity
 from input_handlers import EventHandler
+
+#FIND A PLACE TO INSTANTIATE UI MANAGER
 
 def main():
     screen_width = 80
