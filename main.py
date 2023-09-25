@@ -1,4 +1,3 @@
-
 import tcod
 
 from engine import Engine
